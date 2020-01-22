@@ -1,21 +1,44 @@
-import React, { Component } from 'react';
-import {
-  Map, InfoWindow, Marker, GoogleApiWrapper,
-} from 'google-maps-react';
+import React, { useState, useEffect } from 'react';
+import { GoogleMap } from '@react-google-maps/api';
+
 
 import { Container } from './styles';
 
-class MapContainer extends Component {
-  render() {
-    return (
-      <Map
-        google={this.props.google}
-        zoom={14}
-      />
-    );
-  }
-}
+export default function MapContainer() {
+  const [lat, setLat] = useState(-25.4110039);
+  const [lng, setLng] = useState(-49.0449647);
 
-export default GoogleApiWrapper({
-  apiKey: ('AIzaSyCXDjlo8nNGHaU_hpecD4eqqbXuDH83ZGU'),
-})(MapContainer);
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setLat(latitude);
+        setLng(longitude);
+      },
+      (err) => {
+        console.log(err);
+      },
+      {
+        timeout: 30000,
+      },
+    );
+  }, []);
+
+
+  return (
+    <Container>
+      <GoogleMap
+        id="circle-example"
+        mapContainerStyle={{
+          height: '100%',
+          width: '100%',
+        }}
+        zoom={13}
+        center={{
+          lat,
+          lng,
+        }}
+      />
+    </Container>
+  );
+}
