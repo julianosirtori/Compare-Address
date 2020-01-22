@@ -10,6 +10,11 @@ import {
 } from './styles';
 
 export default function Home() {
+  function searchInput(place) {
+    console.log(place);
+  }
+
+
   return (
     <Container>
       <Sidebar>
@@ -17,7 +22,7 @@ export default function Home() {
           <img src={FindHouse} alt="Comparar Endereços" />
           <strong>Comparar Endereços</strong>
         </HeaderTitle>
-        <SearchInput />
+        <SearchInput onClickPlace={searchInput} />
         <ul>
           <li>
             <Pin color="#9a67ea"><strong>1</strong></Pin>

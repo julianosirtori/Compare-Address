@@ -7,7 +7,7 @@ export const Container = styled.div`
 `;
 
 export const Sidebar = styled.div`
-  width: 288px;
+  width: 360px;
   background: #1976D2E6;
   box-shadow: 3px 3px 3px #00000029;
   color: #FFF;

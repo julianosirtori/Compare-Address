@@ -12,6 +12,7 @@ function App() {
       <BrowserRouter>
         <LoadScript
           id="script-loader"
+          libraries={['places']}
           googleMapsApiKey="AIzaSyCXDjlo8nNGHaU_hpecD4eqqbXuDH83ZGU"
         >
           <Routes />
