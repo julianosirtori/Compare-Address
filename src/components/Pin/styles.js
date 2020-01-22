@@ -2,24 +2,24 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   position: relative;
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
   margin-bottom: 6px;
 
 `;
 
 export const Content = styled.div`
   position: absolute;
-  top: 15%;
-  left: 32%;
+  top: 10%;
+  left: 30%;
   width: 100%;
   height: 100%;
 `;
 
 
 export const PinIcon = styled.div`
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
   background: ${(props) => (props.color ? props.color : '#FFFFFF')};
   border-radius: 100%;
   
@@ -28,10 +28,11 @@ export const PinIcon = styled.div`
     content: '';
     width: 0px;
     height: 0px;
-    bottom: -24px;
+    bottom: -13px;
     left: 0px;
-    border: 12px solid transparent;
-    border-top: 24px solid ${(props) => (props.color ? props.color : '#FFFFFF')};
+    border: 8px solid transparent;
+    border-top: 12px solid ${(props) => (props.color ? props.color : '#FFFFFF')};
+    /* border-top: 16px solid #FFFFFF; */
   }
 
 `;
