@@ -1,17 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Marker } from '@react-google-maps/api';
 
 import FindHouse from '../../assets/images/find_house.svg';
 import SearchInput from '../../components/SearchInput';
 import MapContainer from '../../components/MapContainer';
 import Pin from '../../components/Pin';
 
+import Pin1 from '../../assets/images/pin_1.svg';
+import Pin2 from '../../assets/images/pin_2.svg';
+import Pin3 from '../../assets/images/pin_3.svg';
+import Pin4 from '../../assets/images/pin_4.svg';
+
 import {
   Container, Sidebar, HeaderTitle, Content, Filters,
 } from './styles';
 
 export default function Home() {
+  const [places, setPlaces] = useState([]);
+
   function searchInput(place) {
-    console.log(place);
+    setPlaces([...places, {
+      id: place.id,
+      lat: place.geometry.location.lat(),
+      lng: place.geometry.location.lng(),
+      formatted_address: place.formatted_address,
+    }]);
+  }
+
+  function getIconByIndex(index) {
+    if (index === 0) {
+      return Pin1;
+    } if (index === 1) {
+      return Pin2;
+    } if (index === 2) {
+      return Pin3;
+    } if (index === 3) {
+      return Pin4;
+    }
+    return '';
   }
 
 
@@ -24,18 +50,14 @@ export default function Home() {
         </HeaderTitle>
         <SearchInput onClickPlace={searchInput} />
         <ul>
-          <li>
-            <Pin color="#9a67ea"><strong>1</strong></Pin>
-            <span>Rua Osvaldo Cruz, 263, Zona 07</span>
-          </li>
-          <li>
-            <Pin color="#9a67ea"><strong>2</strong></Pin>
-            <span>Rua 10 de Maio. 379</span>
-          </li>
-          <li>
-            <Pin color="#9a67ea"><strong>3</strong></Pin>
-            <span>Av das Palmeiras</span>
-          </li>
+          {places.map((item, index) => (
+            <li key={item.id}>
+              <img src={getIconByIndex(index)} alt="PinOne" />
+              <span>{item.formatted_address}</span>
+            </li>
+          ))}
+
+
         </ul>
         <Filters>
           <strong>Exibir Serviços Proximos</strong>
@@ -76,7 +98,19 @@ export default function Home() {
 
       </Sidebar>
       <Content>
-        <MapContainer />
+        <MapContainer>
+          {places.map((item, index) => (
+            <Marker
+              key={item.id}
+              icon={{
+                url: getIconByIndex(index),
+                scaledSize: new window.google.maps.Size(26, 40),
+              }}
+              title={item.formatted_address}
+              position={item}
+            />
+          ))}
+        </MapContainer>
       </Content>
     </Container>
   );

@@ -6,11 +6,13 @@ import { Container } from './styles';
 
 export default function SearchInput({ onClickPlace }) {
   const [autocomplete, setAutocomplete] = useState(null);
+  const [address, setAddress] = useState('');
 
 
   function onPlaceChanged() {
     if (autocomplete !== null) {
       onClickPlace(autocomplete.getPlace());
+      setAddress('');
     } else {
       console.log('Autocomplete is not loaded yet!');
     }
@@ -22,7 +24,12 @@ export default function SearchInput({ onClickPlace }) {
         onLoad={setAutocomplete}
         onPlaceChanged={onPlaceChanged}
       >
-        <input type="text" placeholder="Pesquisar Endereço" />
+        <input
+          type="text"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          placeholder="Pesquisar Endereço"
+        />
       </Autocomplete>
       <MdSearch size={19} color="#333333" />
 

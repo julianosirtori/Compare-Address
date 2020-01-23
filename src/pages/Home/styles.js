@@ -23,7 +23,12 @@ export const Sidebar = styled.div`
       align-items: center;
       margin-top: 8px;
       font-size: 14px;
-    
+      
+      img{
+        width: 28px;
+        height: 28px;
+      }
+
       span{
         margin-left: 6px;
       }

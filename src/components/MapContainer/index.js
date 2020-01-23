@@ -4,7 +4,7 @@ import { GoogleMap } from '@react-google-maps/api';
 
 import { Container } from './styles';
 
-export default function MapContainer() {
+export default function MapContainer({ children }) {
   const [lat, setLat] = useState(-25.4110039);
   const [lng, setLng] = useState(-49.0449647);
 
@@ -38,7 +38,9 @@ export default function MapContainer() {
           lat,
           lng,
         }}
-      />
+      >
+        {children}
+      </GoogleMap>
     </Container>
   );
 }
