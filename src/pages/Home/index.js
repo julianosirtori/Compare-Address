@@ -14,9 +14,11 @@ import Pin4 from '../../assets/images/pin_4.svg';
 import {
   Container, Sidebar, HeaderTitle, Content, Filters,
 } from './styles';
+import HomeContext from './context';
 
 export default function Home() {
   const [places, setPlaces] = useState([]);
+  const [latLng, setLatLng] = useState(new window.google.maps.LatLng(-25.4110039, -49.0449647));
 
   function searchInput(place) {
     setPlaces([...places, {
@@ -42,76 +44,78 @@ export default function Home() {
 
 
   return (
-    <Container>
-      <Sidebar>
-        <HeaderTitle>
-          <img src={FindHouse} alt="Comparar Endereços" />
-          <strong>Comparar Endereços</strong>
-        </HeaderTitle>
-        <SearchInput onClickPlace={searchInput} />
-        <ul>
-          {places.map((item, index) => (
-            <li key={item.id}>
-              <img src={getIconByIndex(index)} alt="PinOne" />
-              <span>{item.formatted_address}</span>
-            </li>
-          ))}
-
-
-        </ul>
-        <Filters>
-          <strong>Exibir Serviços Proximos</strong>
+    <HomeContext.Provider value={{ latLng, setLatLng }}>
+      <Container>
+        <Sidebar>
+          <HeaderTitle>
+            <img src={FindHouse} alt="Comparar Endereços" />
+            <strong>Comparar Endereços</strong>
+          </HeaderTitle>
+          <SearchInput onClickPlace={searchInput} />
           <ul>
-            <li>
-              <input type="checkbox" name="academia" id="academia" />
-              <label htmlFor="academia">Academia</label>
-              <Pin color="#fbff00" />
-            </li>
-            <li>
-              <input type="checkbox" name="padaria" id="padaria" />
-              <label htmlFor="padaria">Padarias</label>
-              <Pin color="#ff6f00" />
-            </li>
-            <li>
-              <input type="checkbox" name="supermercados" id="supermercados" />
-              <label htmlFor="supermercados">Super Mercados</label>
-              <Pin color="#ff6f00" />
-            </li>
-            <li>
-              <input type="checkbox" name="hospital" id="hospital" />
-              <label htmlFor="hospital">Hospitais</label>
-              <Pin color="#ff0000" />
-            </li>
-            <li>
-              <input type="checkbox" name="farmacias" id="farmacias" />
-              <label htmlFor="farmacias">Farmacias</label>
-              <Pin color="#0026ff" />
-            </li>
-            <li>
-              <input type="checkbox" name="parques" id="parques" />
-              <label htmlFor="parques">PArques</label>
-              <Pin color="#00ff08" />
-            </li>
+            {places.map((item, index) => (
+              <li key={item.id}>
+                <img src={getIconByIndex(index)} alt="PinOne" />
+                <span>{item.formatted_address}</span>
+              </li>
+            ))}
+
 
           </ul>
-        </Filters>
+          <Filters>
+            <strong>Exibir Serviços Proximos</strong>
+            <ul>
+              <li>
+                <input type="checkbox" name="academia" id="academia" />
+                <label htmlFor="academia">Academia</label>
+                <Pin color="#fbff00" />
+              </li>
+              <li>
+                <input type="checkbox" name="padaria" id="padaria" />
+                <label htmlFor="padaria">Padarias</label>
+                <Pin color="#ff6f00" />
+              </li>
+              <li>
+                <input type="checkbox" name="supermercados" id="supermercados" />
+                <label htmlFor="supermercados">Super Mercados</label>
+                <Pin color="#ff6f00" />
+              </li>
+              <li>
+                <input type="checkbox" name="hospital" id="hospital" />
+                <label htmlFor="hospital">Hospitais</label>
+                <Pin color="#ff0000" />
+              </li>
+              <li>
+                <input type="checkbox" name="farmacias" id="farmacias" />
+                <label htmlFor="farmacias">Farmacias</label>
+                <Pin color="#0026ff" />
+              </li>
+              <li>
+                <input type="checkbox" name="parques" id="parques" />
+                <label htmlFor="parques">PArques</label>
+                <Pin color="#00ff08" />
+              </li>
 
-      </Sidebar>
-      <Content>
-        <MapContainer>
-          {places.map((item, index) => (
-            <Marker
-              key={item.id}
-              icon={{
-                url: getIconByIndex(index),
-                scaledSize: new window.google.maps.Size(26, 40),
-              }}
-              title={item.formatted_address}
-              position={item}
-            />
-          ))}
-        </MapContainer>
-      </Content>
-    </Container>
+            </ul>
+          </Filters>
+
+        </Sidebar>
+        <Content>
+          <MapContainer>
+            {places.map((item, index) => (
+              <Marker
+                key={item.id}
+                icon={{
+                  url: getIconByIndex(index),
+                  scaledSize: new window.google.maps.Size(26, 40),
+                }}
+                title={item.formatted_address}
+                position={item}
+              />
+            ))}
+          </MapContainer>
+        </Content>
+      </Container>
+    </HomeContext.Provider>
   );
 }

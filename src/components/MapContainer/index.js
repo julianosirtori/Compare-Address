@@ -1,29 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { GoogleMap } from '@react-google-maps/api';
 
+import getCurrentPosition from '../../utils/getCurrentPosition';
 
+import HomeContext from '../../pages/Home/context';
 import { Container } from './styles';
 
 export default function MapContainer({ children }) {
-  const [lat, setLat] = useState(-25.4110039);
-  const [lng, setLng] = useState(-49.0449647);
+  const { latLng, setLatLng } = useContext(HomeContext);
+  const [center, setCenter] = useState(latLng);
+  const [mapRef, setMapRef] = useState(null);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setLat(latitude);
-        setLng(longitude);
-      },
-      (err) => {
-        console.log(err);
-      },
-      {
-        timeout: 30000,
-      },
-    );
+    getCurrentPosition((latitude, longitude) => {
+      setCenter({
+        lat: latitude,
+        lng: longitude,
+      });
+    });
   }, []);
 
+  function onCenterChanged() {
+    if (mapRef !== null) {
+      setLatLng(mapRef.getCenter());
+    }
+  }
 
   return (
     <Container>
@@ -34,10 +35,9 @@ export default function MapContainer({ children }) {
           width: '100%',
         }}
         zoom={13}
-        center={{
-          lat,
-          lng,
-        }}
+        onLoad={setMapRef}
+        center={center}
+        onCenterChanged={onCenterChanged}
       >
         {children}
       </GoogleMap>
