@@ -6,7 +6,7 @@ import getCurrentPosition from '../../utils/getCurrentPosition';
 import HomeContext from '../../pages/Home/context';
 import { Container } from './styles';
 
-export default function MapContainer({ children }) {
+export default function MapContainer({ children, onClick }) {
   const { latLng, setLatLng } = useContext(HomeContext);
   const [center, setCenter] = useState(latLng);
   const [mapRef, setMapRef] = useState(null);
@@ -30,6 +30,7 @@ export default function MapContainer({ children }) {
     <Container>
       <GoogleMap
         id="circle-example"
+        onClick={(mouseEvent) => onClick(mouseEvent, mapRef)}
         mapContainerStyle={{
           height: '100%',
           width: '100%',

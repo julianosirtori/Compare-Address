@@ -1,32 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Marker } from '@react-google-maps/api';
+
+import { formatNumberInStringKm, getDistanceFromLatLonInKm } from '../../utils/getDistanceFromLatLonInKm';
 
 import FindHouse from '../../assets/images/find_house.svg';
 import SearchInput from '../../components/SearchInput';
 import MapContainer from '../../components/MapContainer';
-import Pin from '../../components/Pin';
 
 import Pin1 from '../../assets/images/pin_1.svg';
 import Pin2 from '../../assets/images/pin_2.svg';
 import Pin3 from '../../assets/images/pin_3.svg';
 import Pin4 from '../../assets/images/pin_4.svg';
+import Pin from '../../assets/images/pin.svg';
+
 
 import {
-  Container, Sidebar, HeaderTitle, Content, Filters,
+  Container, Sidebar, HeaderTitle, Content,
 } from './styles';
 import HomeContext from './context';
 
 export default function Home() {
+  const [placeToCampare, setPlaceToCompare] = useState({ name: '', latLng: null });
   const [places, setPlaces] = useState([]);
   const [latLng, setLatLng] = useState(new window.google.maps.LatLng(-25.4110039, -49.0449647));
 
   function searchInput(place) {
-    setPlaces([...places, {
-      id: place.id,
-      lat: place.geometry.location.lat(),
-      lng: place.geometry.location.lng(),
-      formatted_address: place.formatted_address,
-    }]);
+    const addressSplit = place.formatted_address.split(',');
+    if (placeToCampare.latLng !== null) {
+      console.log(placeToCampare.latLng.lat(), placeToCampare.latLng.lng());
+      setPlaces([...places, {
+        id: place.id,
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+        formatted_address: `${addressSplit[0]} ${addressSplit[1]}`,
+        distance: formatNumberInStringKm(getDistanceFromLatLonInKm(
+          place.geometry.location.lat(), place.geometry.location.lng(),
+          placeToCampare.latLng.lat(), placeToCampare.latLng.lng(),
+        )),
+      }]);
+    } else {
+      setPlaces([...places, {
+        id: place.id,
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+        formatted_address: `${addressSplit[0]} ${addressSplit[1]}`,
+        distance: '',
+      }]);
+    }
+  }
+
+
+  function compareAddresses(event, mapRef) {
+    const { placeId, placeLatLng = latLng } = event;
+    const service = new window.google.maps.places.PlacesService(mapRef);
+    service.getDetails({ placeId, fields: ['name'] }, (results, status) => {
+      if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+        setPlaceToCompare({ name: results.name, latLng: placeLatLng });
+      }
+    });
+    setPlaces(places.map((place) => ({
+      ...place,
+      distance: formatNumberInStringKm(getDistanceFromLatLonInKm(
+        place.lat, place.lng,
+        placeLatLng.lat(), placeLatLng.lng(),
+      )),
+    })));
   }
 
   function getIconByIndex(index) {
@@ -39,7 +77,7 @@ export default function Home() {
     } if (index === 3) {
       return Pin4;
     }
-    return '';
+    return Pin;
   }
 
 
@@ -52,56 +90,21 @@ export default function Home() {
             <strong>Comparar Endereços</strong>
           </HeaderTitle>
           <SearchInput onClickPlace={searchInput} />
+          <p>Clique em um Pin no mapa para comparar com os enderecos abaixo:</p>
+          <h3>{placeToCampare.name}</h3>
           <ul>
             {places.map((item, index) => (
               <li key={item.id}>
-                <img src={getIconByIndex(index)} alt="PinOne" />
+                <img src={getIconByIndex(index)} alt="Pin" />
                 <span>{item.formatted_address}</span>
+                <strong>{item.distance}</strong>
               </li>
             ))}
-
-
           </ul>
-          <Filters>
-            <strong>Exibir Serviços Proximos</strong>
-            <ul>
-              <li>
-                <input type="checkbox" name="academia" id="academia" />
-                <label htmlFor="academia">Academia</label>
-                <Pin color="#fbff00" />
-              </li>
-              <li>
-                <input type="checkbox" name="padaria" id="padaria" />
-                <label htmlFor="padaria">Padarias</label>
-                <Pin color="#ff6f00" />
-              </li>
-              <li>
-                <input type="checkbox" name="supermercados" id="supermercados" />
-                <label htmlFor="supermercados">Super Mercados</label>
-                <Pin color="#ff6f00" />
-              </li>
-              <li>
-                <input type="checkbox" name="hospital" id="hospital" />
-                <label htmlFor="hospital">Hospitais</label>
-                <Pin color="#ff0000" />
-              </li>
-              <li>
-                <input type="checkbox" name="farmacias" id="farmacias" />
-                <label htmlFor="farmacias">Farmacias</label>
-                <Pin color="#0026ff" />
-              </li>
-              <li>
-                <input type="checkbox" name="parques" id="parques" />
-                <label htmlFor="parques">PArques</label>
-                <Pin color="#00ff08" />
-              </li>
-
-            </ul>
-          </Filters>
-
+          {/* Rua Capitão Frederico Virmond - Santa Cruz Guarapuava - PR */}
         </Sidebar>
         <Content>
-          <MapContainer>
+          <MapContainer onClick={compareAddresses}>
             {places.map((item, index) => (
               <Marker
                 key={item.id}

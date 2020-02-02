@@ -14,7 +14,6 @@ export default function SearchInput({ onClickPlace }) {
   useEffect(() => {
     const circle = new window.google.maps.Circle({ radius: 5000, center: latLng });
     setBound(circle.getBounds());
-    console.log(latLng);
   }, [latLng]);
 
   function onPlaceChanged() {
@@ -37,7 +36,7 @@ export default function SearchInput({ onClickPlace }) {
           type="text"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
-          placeholder="Pesquisar Endereço"
+          placeholder="Adicionar Endereços"
         />
       </Autocomplete>
       <MdSearch size={19} color="#333333" />
