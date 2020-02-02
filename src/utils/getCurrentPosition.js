@@ -5,7 +5,7 @@ export default function getCurrentPosition(callback) {
       callback(latitude, longitude);
     },
     (err) => {
-      console.log(err);
+      console.error(err);
     },
     {
       timeout: 30000,

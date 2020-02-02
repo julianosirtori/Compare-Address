@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { GoogleMap } from '@react-google-maps/api';
+import PropTypes from 'prop-types';
 
 import getCurrentPosition from '../../utils/getCurrentPosition';
 
@@ -45,3 +46,11 @@ export default function MapContainer({ children, onClick }) {
     </Container>
   );
 }
+
+MapContainer.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.element),
+    PropTypes.element,
+  ]).isRequired,
+  onClick: PropTypes.func.isRequired,
+};

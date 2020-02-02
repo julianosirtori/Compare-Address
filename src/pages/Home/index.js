@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Marker } from '@react-google-maps/api';
 
 import { formatNumberInStringKm, getDistanceFromLatLonInKm } from '../../utils/getDistanceFromLatLonInKm';
@@ -26,27 +26,16 @@ export default function Home() {
 
   function searchInput(place) {
     const addressSplit = place.formatted_address.split(',');
-    if (placeToCampare.latLng !== null) {
-      console.log(placeToCampare.latLng.lat(), placeToCampare.latLng.lng());
-      setPlaces([...places, {
-        id: place.id,
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng(),
-        formatted_address: `${addressSplit[0]} ${addressSplit[1]}`,
-        distance: formatNumberInStringKm(getDistanceFromLatLonInKm(
-          place.geometry.location.lat(), place.geometry.location.lng(),
-          placeToCampare.latLng.lat(), placeToCampare.latLng.lng(),
-        )),
-      }]);
-    } else {
-      setPlaces([...places, {
-        id: place.id,
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng(),
-        formatted_address: `${addressSplit[0]} ${addressSplit[1]}`,
-        distance: '',
-      }]);
-    }
+    setPlaces([...places, {
+      id: place.id,
+      lat: place.geometry.location.lat(),
+      lng: place.geometry.location.lng(),
+      formatted_address: `${addressSplit[0]} ${addressSplit[1]}`,
+      distance: placeToCampare.latLng !== null ? formatNumberInStringKm(getDistanceFromLatLonInKm(
+        place.geometry.location.lat(), place.geometry.location.lng(),
+        placeToCampare.latLng.lat(), placeToCampare.latLng.lng(),
+      )) : '',
+    }]);
   }
 
 
@@ -101,7 +90,6 @@ export default function Home() {
               </li>
             ))}
           </ul>
-          {/* Rua Capitão Frederico Virmond - Santa Cruz Guarapuava - PR */}
         </Sidebar>
         <Content>
           <MapContainer onClick={compareAddresses}>

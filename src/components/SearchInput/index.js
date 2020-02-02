@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Autocomplete } from '@react-google-maps/api';
 import { MdSearch } from 'react-icons/md';
+import PropTypes from 'prop-types';
 
 import { Container } from './styles';
 import HomeContext from '../../pages/Home/context';
@@ -21,7 +22,7 @@ export default function SearchInput({ onClickPlace }) {
       onClickPlace(autocomplete.getPlace());
       setAddress('');
     } else {
-      console.log('Autocomplete is not loaded yet!');
+      console.warn('Autocomplete is not loaded yet!');
     }
   }
 
@@ -45,3 +46,7 @@ export default function SearchInput({ onClickPlace }) {
     </Container>
   );
 }
+
+SearchInput.propTypes = {
+  onClickPlace: PropTypes.func.isRequired,
+};

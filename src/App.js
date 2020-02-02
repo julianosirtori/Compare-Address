@@ -13,7 +13,7 @@ function App() {
         <LoadScript
           id="script-loader"
           libraries={['places']}
-          googleMapsApiKey="AIzaSyCXDjlo8nNGHaU_hpecD4eqqbXuDH83ZGU"
+          googleMapsApiKey="<INSERT HERE YOUR API KEY>"
         >
           <Routes />
         </LoadScript>
