@@ -5,6 +5,11 @@
 
 ## Running Locally
 
+You need get your api key and paste in `src/App.js`
+
+Setp to setp for get your API KEY:
+https://developers.google.com/maps/documentation/javascript/get-api-key?hl=pt-br
+
 ```sh
 yarn install
 
