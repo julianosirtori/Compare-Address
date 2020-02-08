@@ -25,17 +25,19 @@ export default function Home() {
   const [latLng, setLatLng] = useState(new window.google.maps.LatLng(-25.4110039, -49.0449647));
 
   function searchInput(place) {
-    const addressSplit = place.formatted_address.split(',');
-    setPlaces([...places, {
-      id: place.id,
-      lat: place.geometry.location.lat(),
-      lng: place.geometry.location.lng(),
-      formatted_address: `${addressSplit[0]} ${addressSplit[1]}`,
-      distance: placeToCampare.latLng !== null ? formatNumberInStringKm(getDistanceFromLatLonInKm(
-        place.geometry.location.lat(), place.geometry.location.lng(),
-        placeToCampare.latLng.lat(), placeToCampare.latLng.lng(),
-      )) : '',
-    }]);
+    if (place.formatted_address !== undefined) {
+      const addressSplit = place.formatted_address.split(',');
+      setPlaces([...places, {
+        id: place.id,
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+        formatted_address: `${addressSplit[0]} ${addressSplit[1]}`,
+        distance: placeToCampare.latLng !== null ? formatNumberInStringKm(getDistanceFromLatLonInKm(
+          place.geometry.location.lat(), place.geometry.location.lng(),
+          placeToCampare.latLng.lat(), placeToCampare.latLng.lng(),
+        )) : '',
+      }]);
+    }
   }
 
 
